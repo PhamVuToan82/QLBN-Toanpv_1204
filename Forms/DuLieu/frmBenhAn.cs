@@ -16,6 +16,7 @@ using System.IO;
 
 namespace NamDinh_QLBN.Forms.DuLieu
 {
+    //test
     public partial class frmBenhAn : Form
     {
         public string _MaVaoVien  = "";
