@@ -1,0 +1,149 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+using C1.Win.C1FlexGrid;
+using GlobalModuls;
+using System.Data.SqlClient;
+namespace NamDinh_QLBN.Forms.DuLieu
+{
+    public partial class frmBangKeSoCaThuThuat_Thanhtoan : Form
+    {
+        private string prvTuNgay = "";
+        DataDynamics.ActiveReports.ActiveReport3 rpt1 = null;
+        DataDynamics.ActiveReports.Viewer.Viewer aview1 = null;
+        public frmBangKeSoCaThuThuat_Thanhtoan()
+        {
+            InitializeComponent();
+        }
+
+        //private void fg_AfterSelChange(object sender, C1.Win.C1FlexGrid.RangeEventArgs e)
+        //{
+        //    int TabIndex=-1;
+        //    if (fg.Tag.ToString() == "0"|| fg.Row<1) return;
+        //    DataDynamics.ActiveReports.ActiveReport3 rpt = null;
+        //    for (int i = 0; i < tabBaoCao.TabPages.Count; i++)
+        //    {
+        //        if (tabBaoCao.TabPages[i].Name == fg[fg.Row, 0].ToString()) TabIndex = i;
+        //    }
+        //    if (TabIndex == -1)
+        //    {                
+        //        AddTabBaoCao(fg[e.NewRange.r1, 2].ToString(), fg[fg.Row, 1].ToString());
+        //        TabIndex = tabBaoCao.TabPages.Count - 1;
+        //    }            
+        //    tabBaoCao.SelectedIndex = TabIndex;
+        //    DataDynamics.ActiveReports.Viewer.Viewer aview = (DataDynamics.ActiveReports.Viewer.Viewer)tabBaoCao.TabPages[TabIndex].Controls["view" + fg[fg.Row, 2].ToString()];
+        //    string newDK = txtTuNgay.Text;
+        //    if (aview.Tag.ToString() !=newDK)
+        //    {
+        //        rpt = TongHopBaoCao(fg[fg.Row, 2].ToString());                
+        //        aview.Document.Dispose();
+        //        aview.Document = rpt.Document;
+        //        aview.Tag= newDK;
+        //    }
+        //}
+        //private DataDynamics.ActiveReports.ActiveReport3 TongHopBaoCao(string LoaiBaoCao)
+        //{
+        //    DataDynamics.ActiveReports.ActiveReport3 rpt=null;           
+        //    switch (LoaiBaoCao )
+        //    {
+        //        case "1":
+        //            rpt = new NamDinh_QLBN.Reports.PhauThuat.rptTH_PhuThuat(txtTuNgay.Value);
+        //            break;
+        //        case "2":
+        //            rpt = new NamDinh_QLBN.Reports.PhauThuat.rptPhuCapPhauThuat(txtTuNgay.Value);
+        //            break;
+        //        case "3":
+        //            rpt = new NamDinh_QLBN.Reports.PhauThuat.rptCaPhauThuat(txtTuNgay.Value);
+        //            break;
+        //        case "4":
+        //            rpt = new NamDinh_QLBN.Reports.PhauThuat.repPhauThuatKyThuatCao((DateTime)txtTuNgay.Value);
+        //            break;
+        //    }
+        //    rpt.Run(); 
+        //    prvTuNgay=txtTuNgay.Text;            
+        //    return (rpt);
+        //}
+        private void cmdCancel_Click(object sender, EventArgs e)
+        {
+            this.Dispose();
+        }
+        private void cmdOK_Click(object sender, EventArgs e)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Connection = Global.ConnectSQL;
+            command.CommandText = "SET DATEFORMAT DMY "
+                                    + " UPDATE NAMDINH_KHAMBENH.dbo.tblKHAMBENH SET Thoigianthanhtoan = B.Thoigianthanhtoan, DaTinhPhi = 1"
+                                    + " FROM NAMDINH_KHAMBENH.dbo.tblKHAMBENH a INNER JOIN NAMDINH_VIENPHI.dbo.tblPHIEUTHANHTOAN b ON a.MaKhambenh = b.Nguoinop_Maso"
+                                    + " WHERE DATEDIFF(DAY, a.ThoigianDangky,'01/01/2022') <= 0 AND(a.Thoigianthanhtoan is NULL OR a.DaTinhPhi IS NULL) and b.phieuhuy = 0"
+                                    + " UPDATE NAMDINH_KHAMBENH.dbo.tblKHAMBENH SET Thoigianthanhtoan = B.Thoigianthanhtoan, DaTinhPhi = 1"
+                                    + " FROM NAMDINH_KHAMBENH.dbo.tblKHAMBENH a INNER JOIN NAMDINH_VIENPHI.dbo.tblTHANHTOANBHYT b ON a.MaKhambenh = b.MaKhambenh"
+                                    + " WHERE DATEDIFF(DAY, a.ThoigianDangky,'01/01/2022') <= 0 AND(a.Thoigianthanhtoan is NULL OR a.DaTinhPhi IS NULL) and b.phieuhuy = 0";
+            command.ExecuteNonQuery();
+            //DataDynamics.ActiveReports.Viewer.Viewer viewBaoCao = new DataDynamics.ActiveReports.Viewer.Viewer();
+            //viewBaoCao.Name = "view";
+            //viewBaoCao.Dock = DockStyle.Fill;
+            //viewBaoCao.Tag = "";
+            //panel1.Controls.Add(viewBaoCao);
+            //DataDynamics.ActiveReports.ActiveReport3 rpt = null;
+            //DataDynamics.ActiveReports.Viewer.Viewer aview = (DataDynamics.ActiveReports.Viewer.Viewer)panel1.Controls["view"];
+            //rpt = new NamDinh_QLBN.Reports.PhauThuat.rptPhuCapThuThuat(txtTuNgay.Value, GlobalModuls.Global.GetCode(cmbKhoa), cmbKhoa.SelectedText);
+            //aview.Document.Dispose();
+            //rpt.Run();
+            //aview.Document = rpt.Document;
+            DataDynamics.ActiveReports.Viewer.Viewer viewBaoCao = new DataDynamics.ActiveReports.Viewer.Viewer();
+            viewBaoCao.Name = "view";
+            viewBaoCao.Dock = DockStyle.Fill;
+            viewBaoCao.Tag = "";
+            panel1.Controls.Add(viewBaoCao);
+            DataDynamics.ActiveReports.ActiveReport3 rpt = null;
+            DataDynamics.ActiveReports.Viewer.Viewer aview = (DataDynamics.ActiveReports.Viewer.Viewer)panel1.Controls["view"];
+            rpt = new NamDinh_QLBN.Reports.BaoCaoNoiTru.ThuThuat.rptBangKeSoCaThuThuat_ThanhToan((DateTime)txtTuNgay.Value, (DateTime)txtDenNgay.Value, GlobalModuls.Global.GetCode(cmbKhoa), cmbKhoa.Text);
+            aview.Document.Dispose();
+            rpt.Run();
+            aview.Document = rpt.Document;
+         }
+
+        private void cmdXuatFile_Click(object sender, EventArgs e)
+        {
+            DataDynamics.ActiveReports.ActiveReport3 rpt = null;
+            //DataDynamics.ActiveReports.Viewer.Viewer aview = (DataDynamics.ActiveReports.Viewer.Viewer)panel1.Controls["view"];
+            rpt = new NamDinh_QLBN.Reports.BaoCaoNoiTru.ThuThuat.rptBangKeSoCaThuThuat_ThanhToan((DateTime)txtTuNgay.Value, (DateTime)txtDenNgay.Value, GlobalModuls.Global.GetCode(cmbKhoa), cmbKhoa.Text);
+            rpt.Run();
+            NamDinh_QLBN.Forms.Tien_ich.ExportForm frm = new NamDinh_QLBN.Forms.Tien_ich.ExportForm(aview1.Document);
+            frm.ShowDialog();
+        }
+
+        private void frmBangKeSoCaThuThuat_Thanhtoan_Load(object sender, EventArgs e)
+        {
+            System.Data.SqlClient.SqlCommand SQLCmd = new System.Data.SqlClient.SqlCommand();
+            System.Data.SqlClient.SqlDataReader dr;
+            SQLCmd.Connection = GlobalModuls.Global.ConnectSQL;
+            SQLCmd.CommandText = "SELECT * FROM DMKHOAPHONG WHERE IS_KHOADIEUTRI = 1";
+            dr = SQLCmd.ExecuteReader();
+            cmbKhoa.Tag = "0";
+            cmbKhoa.ClearItems();
+            while (dr.Read())
+            {
+                cmbKhoa.AddItem(string.Format("{0};{1}", dr["MaKhoa"], dr["TenKhoa"]));
+            }
+            dr.Close();
+            cmbKhoa.Tag = "1";
+            if (cmbKhoa.ListCount > 0)
+            {
+                GlobalModuls.Global.SetCmb(cmbKhoa, GlobalModuls.Global.glbMaKhoaPhong);
+            }
+            SQLCmd.Dispose();
+            txtTuNgay.Value = GlobalModuls.Global.NgayLV;
+            txtDenNgay.Value = GlobalModuls.Global.NgayLV;   
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
